@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Text to Speech Converter</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    #text-input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+    #speech-button, #download-button {
+        padding: 10px 20px;
+        margin-right: 10px;
+        cursor: pointer;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+    }
+    #download-button {
+        background-color: #28a745;
+    }
+    footer {
+        text-align: center;
+        margin-top: 50px;
+        padding: 10px;
+        background-color: #f8f9fa;
+    }
+</style>
+</head>
+<body>
+    <input type="text" id="text-input" placeholder="Enter text to convert">
+    <button id="speech-button">Convert to Speech</button>
+    <button id="download-button" disabled>Download Audio</button>
+    <audio id="audio" controls style="display: none;"></audio>
+
+    <footer>
+        Developed by MUHAMMAD WASIM
+    </footer>
+
+    <script>
+        const textInput = document.getElementById('text-input');
+        const speechButton = document.getElementById('speech-button');
+        const downloadButton = document.getElementById('download-button');
+        const audioElement = document.getElementById('audio');
+
+        // Initialize SpeechSynthesis API
+        const synth = window.speechSynthesis;
+
+        // Function to speak text
+        function speakText(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            synth.speak(utterance);
+        }
+
+        // Function to download speech as audio file
+        function downloadSpeech(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            const audioBlob = new Blob([text], { type: 'audio/wav' });
+            const url = URL.createObjectURL(audioBlob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = 'speech.wav';
+            document.body.appendChild(a);
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        speechButton.addEventListener('click', () => {
+            const text = textInput.value;
+            if (text !== '') {
+                speakText(text);
+                downloadButton.disabled = false;
+            } else {
+                alert('Please enter some text.');
+            }
+        });
+
+        downloadButton.addEventListener('click', () => {
+            const text = textInput.value;
+            if (text !== '') {
+                downloadSpeech(text);
+            } else {
+                alert('Please enter some text.');
+            }
+        });
+    </script>
+</body>
+</html>
